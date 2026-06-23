@@ -5,8 +5,6 @@ create table users (
     created_at timestamp not null default current_timestamp
 );
 
-
-
 create table events (
     id bigserial primary key,
     home_team varchar(100) not null,
