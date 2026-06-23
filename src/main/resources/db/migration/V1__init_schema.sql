@@ -77,3 +77,5 @@ create table transactions (
         foreign key (user_id)
         references users(id)
 );
+
+
