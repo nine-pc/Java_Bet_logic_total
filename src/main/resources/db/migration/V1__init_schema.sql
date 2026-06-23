@@ -24,6 +24,18 @@ create table markets (
         references events(id)
 );
 
+create table outcomes(
+    id bigserial primary key,
+    market_id bigint not null,
+    name varchar(100) not null,
+    odds numeric(10, 2) not null,
+    active boolean not null default true,
+
+    constraint fk_outcome_market
+        foreign key (market_id)
+        references markets(id)
+);
+
 create table bet_slips (
     id bigserial primary key,
     user_id bigint not null,
@@ -42,8 +54,8 @@ create table bet_selections (
     id bigserial primary key,
     bet_slip_id bigint not null,
     outcome_id bigint not null,
-    odds numeric(10, 2) nto null,
-    result varchar(20)
+    odds numeric(10, 2) not null,
+    result varchar(20),
 
     constraint fk_selection_betslip
         foreign key (bet_slip_id)
