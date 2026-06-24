@@ -1,19 +1,28 @@
 package com.example.bet.wallet.service;
 
+import com.example.bet.common.enums.TransactionType;
 import com.example.bet.user.entity.User;
 import com.example.bet.user.repository.UserRepository;
 import com.example.bet.wallet.dto.DepositRequest;
 import com.example.bet.wallet.dto.DepositResponse;
+import com.example.bet.wallet.entity.Transaction;
+import com.example.bet.wallet.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 public class WalletService {
 
     private final UserRepository userRepository;
+    private final TransactionRepository transactionRepository;
 
-    public WalletService(UserRepository userRepository) {
+    public WalletService(UserRepository userRepository, TransactionRepository transactionRepository) {
+
         this.userRepository = userRepository;
+        this.transactionRepository = transactionRepository;
+
     }
 
     @Transactional
@@ -33,6 +42,16 @@ public class WalletService {
         );
 
         User savedUser = userRepository.save(updatedUser);
+
+        Transaction transaction = new Transaction(
+                null,
+                user.id(),
+                request.amount(),
+                TransactionType.DEPOSIT.name(),
+                LocalDateTime.now()
+        );
+
+        transactionRepository.save(transaction);
 
         return new DepositResponse(
                 savedUser.id(),
