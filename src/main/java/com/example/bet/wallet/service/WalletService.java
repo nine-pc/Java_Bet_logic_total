@@ -5,12 +5,14 @@ import com.example.bet.user.entity.User;
 import com.example.bet.user.repository.UserRepository;
 import com.example.bet.wallet.dto.DepositRequest;
 import com.example.bet.wallet.dto.DepositResponse;
+import com.example.bet.wallet.dto.TransactionResponse;
 import com.example.bet.wallet.entity.Transaction;
 import com.example.bet.wallet.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class WalletService {
@@ -57,5 +59,23 @@ public class WalletService {
                 savedUser.id(),
                 savedUser.balance()
         );
+    }
+
+    @Transactional
+    public List<TransactionResponse> getTransactions(Long userId) {
+
+        if(userId == null) {
+            throw new RuntimeException("userId is required");
+        }
+
+        return transactionRepository.findByUserId(userId)
+                .stream()
+                .map(transaction -> new TransactionResponse(
+                        transaction.id(),
+                        transaction.amount(),
+                        transaction.type(),
+                        transaction.createdAt()
+                ))
+                .toList();
     }
 }
