@@ -28,7 +28,7 @@ public class BetController {
         return  ResponseEntity.ok(response);
     }
 
-    @GetMapping
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<BetSlipResponse>> getUserBets(
             @PathVariable Long userId
     ) {
