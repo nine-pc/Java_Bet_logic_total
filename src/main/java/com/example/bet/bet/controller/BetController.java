@@ -1,5 +1,6 @@
 package com.example.bet.bet.controller;
 import com.example.bet.bet.dto.BetSlipResponse;
+import com.example.bet.bet.dto.CancelBetResponse;
 import com.example.bet.bet.dto.PlaceBetResponse;
 import com.example.bet.bet.dto.PlaceBetRequest;
 import com.example.bet.bet.service.BetPlacementService;
@@ -34,6 +35,15 @@ public class BetController {
     ) {
         return ResponseEntity.ok(
                 betPlacementService.getUserBets(userId)
+        );
+    }
+
+    @PostMapping("/{betId}/cancel")
+    public ResponseEntity<CancelBetResponse> cancelBet(
+            @PathVariable Long betId
+    ) {
+        return ResponseEntity.ok(
+                betPlacementService.cancelBet(betId)
         );
     }
 }
