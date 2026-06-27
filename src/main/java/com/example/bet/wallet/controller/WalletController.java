@@ -4,6 +4,9 @@ import com.example.bet.wallet.dto.DepositRequest;
 import com.example.bet.wallet.dto.DepositResponse;
 import com.example.bet.wallet.dto.TransactionResponse;
 import com.example.bet.wallet.service.WalletService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +23,9 @@ public class WalletController {
     }
 
     @PostMapping("/deposit")
-    public ResponseEntity<DepositResponse> deposit(@RequestBody DepositRequest request) {
+    public ResponseEntity<DepositResponse> deposit(
+            @Valid @RequestBody DepositRequest request)
+    {
         return ResponseEntity.ok(walletService.deposit(request));
     }
 
