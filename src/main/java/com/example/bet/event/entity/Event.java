@@ -1,5 +1,6 @@
 package com.example.bet.event.entity;
 
+import com.example.bet.common.enums.EventStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -17,7 +18,7 @@ public record Event(
 
         LocalDateTime startTime,
 
-        String status,
+        EventStatus status,
 
         LocalDateTime createdAt
 ) {

@@ -1,5 +1,6 @@
 package com.example.bet.wallet.entity;
 
+import com.example.bet.common.enums.TransactionType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -17,7 +18,7 @@ public record Transaction(
 
         BigDecimal amount,
 
-        String type,
+        TransactionType type,
 
         LocalDateTime createdAt
 

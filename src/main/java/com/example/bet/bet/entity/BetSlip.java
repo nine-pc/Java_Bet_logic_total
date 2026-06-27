@@ -1,5 +1,6 @@
 package com.example.bet.bet.entity;
 
+import com.example.bet.common.enums.BetStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -20,7 +21,7 @@ public record BetSlip(
 
         BigDecimal potentialPayout,
 
-        String status,
+        BetStatus status,
 
         LocalDateTime createdAt
 ) {

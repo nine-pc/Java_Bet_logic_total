@@ -1,9 +1,11 @@
 package com.example.bet.bet.dto;
 
+import com.example.bet.common.enums.BetStatus;
+
 public record CancelBetResponse(
 
         Long betId,
 
-        String status
+        BetStatus status
 ) {
 }

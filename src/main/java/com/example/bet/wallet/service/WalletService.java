@@ -49,7 +49,7 @@ public class WalletService {
                 null,
                 user.id(),
                 request.amount(),
-                TransactionType.DEPOSIT.name(),
+                TransactionType.DEPOSIT,
                 LocalDateTime.now()
         );
 

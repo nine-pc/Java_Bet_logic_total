@@ -4,6 +4,8 @@ import com.example.bet.bet.entity.BetSelection;
 import com.example.bet.bet.entity.BetSlip;
 import com.example.bet.bet.repository.BetSelectionRepository;
 import com.example.bet.bet.repository.BetSlipRepository;
+import com.example.bet.common.enums.BetStatus;
+import com.example.bet.common.enums.SelectionResult;
 import com.example.bet.common.enums.TransactionType;
 import com.example.bet.user.entity.User;
 import com.example.bet.user.repository.UserRepository;
@@ -49,7 +51,7 @@ public class SettlementService {
                             selection.betSlipId(),
                             selection.outcomeId(),
                             selection.odds(),
-                            "WIN"
+                            SelectionResult.WIN
                     );
 
             betSelectionRepository.save(updatedSelection);
@@ -65,7 +67,7 @@ public class SettlementService {
                             betSlip.stake(),
                             betSlip.totalOdds(),
                             betSlip.potentialPayout(),
-                            "WON",
+                            BetStatus.WON,
                             betSlip.createdAt()
                     );
 
@@ -91,7 +93,7 @@ public class SettlementService {
                             null,
                             user.id(),
                             betSlip.potentialPayout(),
-                            TransactionType.BET_WON.name(),
+                            TransactionType.BET_WON,
                             LocalDateTime.now()
                     )
             );

@@ -9,6 +9,7 @@ import com.example.bet.bet.entity.BetSlip;
 import com.example.bet.bet.repository.BetSelectionRepository;
 import com.example.bet.bet.repository.BetSlipRepository;
 import com.example.bet.common.enums.BetStatus;
+import com.example.bet.common.enums.SelectionResult;
 import com.example.bet.common.enums.TransactionType;
 import com.example.bet.outcome.entity.Outcome;
 import com.example.bet.outcome.repository.OutComeRepository;
@@ -73,7 +74,7 @@ public class BetPlacementService {
                 request.stake(),
                 totalOdds,
                 potentialPayout,
-                "PENDING",
+                BetStatus.PENDING,
                 LocalDateTime.now()
         );
 
@@ -84,7 +85,7 @@ public class BetPlacementService {
                 savedBetSlip.id(),
                 outcome.id(),
                 outcome.odds(),
-                "PENDING"
+                SelectionResult.PENDING
         );
 
         betSelectionRepository.save(selection);
@@ -102,7 +103,7 @@ public class BetPlacementService {
                 null,
                 user.id(),
                 request.stake().negate(),
-                TransactionType.BET_PLACED.name(),
+                TransactionType.BET_PLACED,
                 LocalDateTime.now()
         );
 
@@ -121,8 +122,8 @@ public class BetPlacementService {
         BetSlip betSlip = betSlipRepository.findById(betId)
                 .orElseThrow(() -> new RuntimeException("Bet not found"));
 
-        if(!betSlip.status().equals("PENDING")) {
-            throw new RuntimeException("Only  pending bets can be calcelled");
+        if(!betSlip.status().equals(BetStatus.PENDING)) {
+            throw new RuntimeException("Only  pending bets can be cancelled");
         }
 
         User user = userRepository.findById(betSlip.userId())
@@ -143,7 +144,7 @@ public class BetPlacementService {
                 betSlip.stake(),
                 betSlip.totalOdds(),
                 betSlip.potentialPayout(),
-                "CANCELLED",
+                BetStatus.CANCELLED,
                 betSlip.createdAt()
         );
 
@@ -154,7 +155,7 @@ public class BetPlacementService {
                         null,
                         user.id(),
                         betSlip.stake(),
-                        TransactionType.BET_REFUND.name(),
+                        TransactionType.BET_REFUND,
                         LocalDateTime.now()
                 )
         );
