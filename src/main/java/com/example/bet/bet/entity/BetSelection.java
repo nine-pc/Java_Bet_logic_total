@@ -1,5 +1,6 @@
 package com.example.bet.bet.entity;
 
+import com.example.bet.common.enums.SelectionResult;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -16,6 +17,6 @@ public record BetSelection(
 
         BigDecimal odds,
 
-        String result
+        SelectionResult result
 ) {
 }

@@ -1,5 +1,7 @@
 package com.example.bet.event.dto;
 
+import com.example.bet.common.enums.EventStatus;
+
 import java.time.LocalDateTime;
 
 public record EventResponse(
@@ -8,6 +10,6 @@ public record EventResponse(
         String homeTeam,
         String awayTeam,
         LocalDateTime startTime,
-        String status
+        EventStatus status
 ) {
 }
