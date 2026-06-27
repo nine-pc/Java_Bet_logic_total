@@ -1,12 +1,14 @@
 package com.example.bet.bet.service;
 
 import com.example.bet.bet.dto.BetSlipResponse;
+import com.example.bet.bet.dto.CancelBetResponse;
 import com.example.bet.bet.dto.PlaceBetRequest;
 import com.example.bet.bet.dto.PlaceBetResponse;
 import com.example.bet.bet.entity.BetSelection;
 import com.example.bet.bet.entity.BetSlip;
 import com.example.bet.bet.repository.BetSelectionRepository;
 import com.example.bet.bet.repository.BetSlipRepository;
+import com.example.bet.common.enums.BetStatus;
 import com.example.bet.common.enums.TransactionType;
 import com.example.bet.outcome.entity.Outcome;
 import com.example.bet.outcome.repository.OutComeRepository;
@@ -110,6 +112,56 @@ public class BetPlacementService {
                 savedBetSlip.id(),
                 totalOdds,
                 potentialPayout
+        );
+    }
+
+    @Transactional
+    public CancelBetResponse cancelBet(Long betId) {
+
+        BetSlip betSlip = betSlipRepository.findById(betId)
+                .orElseThrow(() -> new RuntimeException("Bet not found"));
+
+        if(!betSlip.status().equals("PENDING")) {
+            throw new RuntimeException("Only  pending bets can be calcelled");
+        }
+
+        User user = userRepository.findById(betSlip.userId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        User updatedUser = new User(
+                user.id(),
+                user.username(),
+                user.balance().add(betSlip.stake()),
+                user.createdAt()
+        );
+
+        userRepository.save(updatedUser);
+
+        BetSlip cancelledBet = new BetSlip(
+                betSlip.id(),
+                betSlip.userId(),
+                betSlip.stake(),
+                betSlip.totalOdds(),
+                betSlip.potentialPayout(),
+                "CANCELLED",
+                betSlip.createdAt()
+        );
+
+        betSlipRepository.save(cancelledBet);
+
+        transactionRepository.save(
+                new Transaction(
+                        null,
+                        user.id(),
+                        betSlip.stake(),
+                        TransactionType.BET_REFUND.name(),
+                        LocalDateTime.now()
+                )
+        );
+
+        return new CancelBetResponse(
+                cancelledBet.id(),
+                cancelledBet.status()
         );
     }
 
