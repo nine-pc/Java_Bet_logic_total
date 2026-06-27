@@ -1,9 +1,13 @@
 package com.example.bet.bet.controller;
+
 import com.example.bet.bet.dto.BetSlipResponse;
 import com.example.bet.bet.dto.CancelBetResponse;
 import com.example.bet.bet.dto.PlaceBetResponse;
 import com.example.bet.bet.dto.PlaceBetRequest;
 import com.example.bet.bet.service.BetPlacementService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +25,7 @@ public class BetController {
 
     @PostMapping
     public ResponseEntity<PlaceBetResponse> placeBet(
-            @RequestBody PlaceBetRequest request
+            @Valid @RequestBody PlaceBetRequest request
     ) {
         PlaceBetResponse response =
                 betPlacementService.placeBet(request);
