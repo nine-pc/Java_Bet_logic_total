@@ -1,5 +1,6 @@
 package com.example.bet.event.service;
 
+import com.example.bet.common.exception.EventNotFoundException;
 import com.example.bet.event.dto.EventResponse;
 import com.example.bet.event.entity.Event;
 import com.example.bet.event.repository.EventRepository;
@@ -28,7 +29,7 @@ public class EventService {
 
     public EventResponse getEvent(Long id) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
+                .orElseThrow(() -> new EventNotFoundException(id));
 
         return toResponse(event);
     }

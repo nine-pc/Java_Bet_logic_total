@@ -11,6 +11,10 @@ import com.example.bet.bet.repository.BetSlipRepository;
 import com.example.bet.common.enums.BetStatus;
 import com.example.bet.common.enums.SelectionResult;
 import com.example.bet.common.enums.TransactionType;
+import com.example.bet.common.exception.BetNotFoundException;
+import com.example.bet.common.exception.InsufficientBalanceException;
+import com.example.bet.common.exception.OutcomeNotFoundException;
+import com.example.bet.common.exception.UserNotFoundException;
 import com.example.bet.outcome.entity.Outcome;
 import com.example.bet.outcome.repository.OutComeRepository;
 import com.example.bet.user.entity.User;
@@ -52,14 +56,14 @@ public class BetPlacementService {
         validateRequest(request);
 
         User user = userRepository.findById(request.userId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException(request.userId()));
 
         if(user.balance().compareTo(request.stake()) < 0) {
-            throw new RuntimeException("Insufficient balance");
+            throw new InsufficientBalanceException();
         }
 
         Outcome outcome = outComeRepository.findById(request.outcomeIds().get(0))
-                .orElseThrow(() -> new RuntimeException("Outcome not found"));
+                .orElseThrow(() -> new OutcomeNotFoundException(request.outcomeIds().get(0)));
 
         if(!Boolean.TRUE.equals(outcome.active())) {
             throw new RuntimeException("Outcome is not active");
@@ -120,14 +124,14 @@ public class BetPlacementService {
     public CancelBetResponse cancelBet(Long betId) {
 
         BetSlip betSlip = betSlipRepository.findById(betId)
-                .orElseThrow(() -> new RuntimeException("Bet not found"));
+                .orElseThrow(() -> new BetNotFoundException(betId));
 
         if(!betSlip.status().equals(BetStatus.PENDING)) {
             throw new RuntimeException("Only  pending bets can be cancelled");
         }
 
         User user = userRepository.findById(betSlip.userId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException(betSlip.userId()));
 
         User updatedUser = new User(
                 user.id(),
